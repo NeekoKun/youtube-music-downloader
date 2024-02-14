@@ -1,8 +1,11 @@
 import os
 from youtubesearchpython import VideosSearch
 
-def download_audio(link):
-    os.system("yt-dlp --extract-audio " + link)
+def download_audio(link, name=None):
+    if name:
+        os.system("yt-dlp -q -o " + name + " --extract-audio " + link)
+    else:
+        os.system("yt-dlp -q --extract-audio " + link)
 
 def title_to_url(title):
     results = VideosSearch(title, limit=10).result()
@@ -12,7 +15,16 @@ def title_to_url(title):
         
     return results['result'][int(input("Input song index:\n"))-1]['link']
 
-try:
-    download_audio(title_to_url(input("Input the song title:\n")))
-except KeyboardInterrupt:
-    print("Youtube Music Downloader terminated")
+while True:
+    try:
+        url = title_to_url("Input song title:\n")
+
+        name = None
+        if len(nm := input("File name:\n")) > 0:
+            name = nm
+
+        download_audio(url, name)
+
+    except KeyboardInterrupt:
+        print("Youtube Music Downloader terminated")
+        break
